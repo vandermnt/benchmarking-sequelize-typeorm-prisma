@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  benchmarking-typeorm:
+    image: postgres
+    container_name: db-benchmarking-typeorm
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=db-benchmarking-typeorm
+
+  benchmarking-prisma:
+    image: postgres
+    container_name: db-benchmarking-prisma
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=db-benchmarking-prisma
+      
+  benchmarking-sequelize:
+    image: postgres
+    container_name: db-benchmarking-sequelize
+    ports:
+      - 5434:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=db-benchmarking-sequelize
