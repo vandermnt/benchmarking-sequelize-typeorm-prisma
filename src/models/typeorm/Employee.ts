@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Department } from './Department';
 
@@ -17,6 +18,9 @@ class Employee {
 
   @Column()
   phone: number;
+
+  @Column()
+  department_id: number;
 
   @ManyToOne(() => Department, (department) => department.id)
   @JoinColumn({ name: 'department_id' })

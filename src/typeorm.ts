@@ -1,26 +1,24 @@
 import { faker } from '@faker-js/faker';
-import { appDataSource } from './data-source';
+import { appDataSource, createConnection } from './data-source';
 import { Employee } from './models/typeorm/Employee';
+import { Department } from './models/typeorm/Department';
 
 const QTD_REGISTER = 600;
-appDataSource.initialize();
+
 const employeeRepository = appDataSource.getRepository(Employee);
+const departmentRepository = appDataSource.getRepository(Department);
 
 class Typeorm {
   constructor() {}
 
   static async saveDepartment(): Promise<void> {
-    const department = [] as any;
-
+    const departments = [] as any;
     for (let i = 0; i < QTD_REGISTER; i++) {
-      department.push({
-        name: faker.company.name(),
-        description: faker.lorem.words(),
-      });
+      departments.push({ name: faker.company.name(), description: faker.lorem.words() });
     }
 
-    employeeRepository.create(department);
-    await employeeRepository.save(department);
+    departmentRepository.create(departments);
+    await departmentRepository.save(departments);
   }
 
   static async saveEmployees(): Promise<void> {
@@ -35,7 +33,6 @@ class Typeorm {
         department_id: Math.floor(Math.random() * 500) + 1,
       });
     }
-
     console.time('[TYPEORM] save many records');
 
     employeeRepository.create(employees);
@@ -59,20 +56,19 @@ class Typeorm {
   static async findWithLimit(): Promise<void> {
     console.time('[TYPEORM] find all with limit 150');
 
-    await employeeRepository.find({
+    const teste = await employeeRepository.find({
       take: 150,
       relations: {
         department: true,
       },
     });
-
     console.timeEnd('[TYPEORM] find all with limit 150');
   }
 
   static async delete(): Promise<void> {
     console.time('[TYPEORM] delete');
 
-    await employeeRepository.delete(Math.floor(Math.random() * 500) + 1);
+    await employeeRepository.delete(Math.floor(Math.random() * (4000 - 1200 + 1)) + 1200);
 
     console.timeEnd('[TYPEORM] delete');
   }
@@ -80,10 +76,13 @@ class Typeorm {
   static async update(): Promise<void> {
     console.time('[TYPEORM] update');
 
-    await employeeRepository.update({ id: Math.floor(Math.random() * 500) + 1 }, { name: faker.person.fullName() });
+    await employeeRepository.update({ id: Math.floor(Math.random() * (4000 - 1200 + 1)) + 1200 }, { name: faker.person.fullName() });
 
     console.timeEnd('[TYPEORM] update');
   }
 }
 
-Typeorm.find();
+(async () => {
+  await createConnection();
+  await Typeorm.update();
+})();
